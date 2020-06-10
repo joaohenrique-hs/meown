@@ -41,14 +41,21 @@ void enableRawMode() {
     die("tcsetattr");
 }
 
+char editorReadKey() {
+  int nread;
+  char c;
+  while((nread = read(STDIN_FILENO, &c, 1)) != 1) {
+    if (nread == -1 && errno != EAGAIN) die("read");
+  }
+  return c;
+}
+
 /*** init ***/
 int main() {
   enableRawMode();
 
   while (1) {
-    char c = '\0';
-    if (read(STDIN_FILENO, &c, 1) == -1 && errno != EAGAIN)
-      die("read");
+    char c = editorReadKey();
 
     if (iscntrl(c)) {
       printf("%d\r\n", c);
