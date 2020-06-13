@@ -17,6 +17,8 @@ struct termios orig_termios; // struct to receive original terminal atributes
 /*** terminal ***/
 
 void die(const char *s) {
+  write(STDIN_FILENO, "\x1b[2J", 4);
+  write(STDIN_FILENO, "\x1b[H", 3);
   perror(s);
   exit(1);
 }
