@@ -7,12 +7,15 @@
 #include <unistd.h>
 
 /*** defines ***/
+
 #define CTRL_KEY(k) ((k) & 0x1f) // change 5 and 6 bit to 0 like CTRL KEY do
 
 /*** data ***/
+
 struct termios orig_termios; // struct to receive original terminal atributes
 
 /*** terminal ***/
+
 void die(const char *s) {
   perror(s);
   exit(1);
