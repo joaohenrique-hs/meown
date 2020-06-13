@@ -12,7 +12,11 @@
 
 /*** data ***/
 
-struct termios orig_termios; // struct to receive original terminal atributes
+struct editorConfig {
+  struct termios orig_termios; // struct to receive original terminal atributes
+};
+
+struct editorConfig E;
 
 /*** terminal ***/
 
@@ -24,16 +28,16 @@ void die(const char *s) {
 }
 
 void disableRawMode() { 
-  if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios) == -1) // reset terminal atributes to default
+  if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &E.orig_termios) == -1) // reset terminal atributes to default
     die("tcsetattr");
 }
 
 void enableRawMode() {
-  if (tcgetattr(STDIN_FILENO, &orig_termios) == -1) // get terminal atributes
+  if (tcgetattr(STDIN_FILENO, &E.orig_termios) == -1) // get terminal atributes
     die("tcgetattr");
 
   atexit(disableRawMode); // schedule disableRawMode function to when program exit
-  struct termios raw = orig_termios; // create new termios struct to store raw mode config
+  struct termios raw = E.orig_termios; // create new termios struct to store raw mode config
 
   // config raw mode
   raw.c_iflag &= ~( BRKINT | ICRNL | INPCK | ISTRIP | IXON); 
@@ -60,7 +64,7 @@ char editorReadKey() {
 
 void editorDrawRows() {
   int y;
-  for (y = 0; y < 24; y++) {
+  for (y = 0; y < 48; y++) {
     write(STDOUT_FILENO, "~\r\n", 3);
   }
 }
@@ -68,6 +72,10 @@ void editorDrawRows() {
 void editorRefreshScreen() {
   write(STDIN_FILENO, "\x1b[2J", 4);
   write(STDIN_FILENO, "\x1b[H", 3);
+
+  editorDrawRows();
+
+  write(STDOUT_FILENO, "\x1b[H", 3);
 }
 
 /*** input ***/
