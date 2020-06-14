@@ -71,7 +71,6 @@ void editorDrawRows() {
 
 void editorRefreshScreen() {
   write(STDIN_FILENO, "\x1b[2J", 4);
-  write(STDIN_FILENO, "\x1b[H", 3);
 
   editorDrawRows();
 
@@ -85,6 +84,7 @@ void editorProcessKeypress() {
 
   switch (c) {
     case CTRL_KEY('q'): // add ctrl_q as exit key
+      editorRefreshScreen();
       exit(0);
       break;
   }
@@ -98,6 +98,7 @@ void editorProcessKeypress() {
 }
 
 /*** init ***/
+
 int main() {
   editorRefreshScreen();
   enableRawMode();
