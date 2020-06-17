@@ -94,6 +94,10 @@ void abAppend(struct abuf *ab, const char *s, int len) {
   ab->len += len;
 }
 
+void abFree(struct abuf *ab) {
+  free(ab->b);
+}
+
 /*** output ***/
 
 void editorDrawRows() {
