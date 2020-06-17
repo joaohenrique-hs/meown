@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <ctype.h>
+#include <string.h>
 #include <sys/ioctl.h>
 #include <stdio.h>
 #include <termios.h>
@@ -74,6 +75,15 @@ int getWindowSize(int *rows, int *cols) {
     return 0;
   }
 }
+
+/*** append buffer ***/
+
+struct abuf {
+  char *b;
+  int len;
+};
+
+#define ABUF_INIT {NULL, 0}
 
 /*** output ***/
 
