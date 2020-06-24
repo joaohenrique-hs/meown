@@ -159,13 +159,6 @@ void editorProcessKeypress() {
       exit(0);
       break;
   }
-  
-  // format output
-  if (iscntrl(c)) {
-      printf("%d\r\n", c);
-    } else {
-      printf("%d ('%c')\r\n", c, c);
-    }
 }
 
 /*** init ***/
@@ -184,7 +177,6 @@ int main() {
   while (1) {
     editorRefreshScreen();
     editorProcessKeypress();
-    E.cx ++;
   };
   return 0;
 }
