@@ -150,6 +150,23 @@ void editorRefreshScreen() {
 
 /*** input ***/
 
+void editorMoveCursor(char key) {
+  switch (key) {
+    case 'h':
+      E.cx--;
+      break;
+    case 'j':
+      E.cy++;
+      break;
+    case 'k':
+      E.cy--;
+      break;
+    case 'l':
+      E.cx++;
+      break;
+  }
+}
+
 void editorProcessKeypress() {
   char c = editorReadKey();
 
@@ -157,6 +174,12 @@ void editorProcessKeypress() {
     case CTRL_KEY('q'): // add ctrl_q as exit key
       editorRefreshScreen();
       exit(0);
+      break;
+    case 'h':
+    case 'j':
+    case 'k':
+    case 'l':
+      editorMoveCursor(c);
       break;
   }
 }
