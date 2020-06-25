@@ -14,6 +14,13 @@
 
 #define CTRL_KEY(k) ((k) & 0x1f) // change 5 and 6 bit to 0 like CTRL KEY do
 
+enum editorKey {
+  ARROW_LEFT = 'h',
+  ARROW_RIGHT = 'l',
+  ARROW_DOWN = 'j',
+  ARROW_UP = 'k'
+};
+
 /*** data ***/
 
 struct editorConfig {
@@ -73,10 +80,10 @@ char editorReadKey() {
 
     if (seq[0] == '[') {
       switch (seq[1]) {
-        case 'A': return 'k';
-        case 'B': return 'j';
-        case 'C': return 'l';
-        case 'D': return 'h';
+        case 'A': return ARROW_UP;
+        case 'B': return ARROW_DOWN;
+        case 'C': return ARROW_RIGHT;
+        case 'D': return ARROW_LEFT;
       }
     }
 
@@ -171,17 +178,17 @@ void editorRefreshScreen() {
 
 void editorMoveCursor(char key) {
   switch (key) {
-    case 'h':
-      E.cx--;
-      break;
-    case 'j':
-      E.cy++;
-      break;
-    case 'k':
+    case ARROW_UP:
       E.cy--;
       break;
-    case 'l':
+    case ARROW_DOWN:
+      E.cy++;
+      break;
+    case ARROW_RIGHT:
       E.cx++;
+      break;
+    case ARROW_LEFT:
+      E.cx--;
       break;
   }
 }
