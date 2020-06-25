@@ -12,7 +12,7 @@
 
 #define MEOWN_VERSION "0.0.1"
 
-#define CTRL_KEY(k) ((k) & 0x1f) // change 5 and 6 bit to 0 like CTRL KEY do
+#define CTRL_KEY(k) ((k) & 0x1f)
 
 enum editorKey {
   ARROW_LEFT = 1000,
@@ -32,7 +32,7 @@ struct editorConfig {
   int cx, cy;
   int screenrows;
   int screencols;
-  struct termios orig_termios; // struct to receive original terminal atributes
+  struct termios orig_termios;
 };
 
 struct editorConfig E;
@@ -47,18 +47,17 @@ void die(const char *s) {
 }
 
 void disableRawMode() { 
-  if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &E.orig_termios) == -1) // reset terminal atributes to default
+  if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &E.orig_termios) == -1)
     die("tcsetattr");
 }
 
 void enableRawMode() {
-  if (tcgetattr(STDIN_FILENO, &E.orig_termios) == -1) // get terminal atributes
+  if (tcgetattr(STDIN_FILENO, &E.orig_termios) == -1)
     die("tcgetattr");
 
-  atexit(disableRawMode); // schedule disableRawMode function to when program exit
-  struct termios raw = E.orig_termios; // create new termios struct to store raw mode config
+  atexit(disableRawMode);
+  struct termios raw = E.orig_termios;
 
-  // config raw mode
   raw.c_iflag &= ~( BRKINT | ICRNL | INPCK | ISTRIP | IXON); 
   raw.c_oflag &= ~(OPOST);
   raw.c_cflag &= ~(CS8);
@@ -66,14 +65,14 @@ void enableRawMode() {
   raw.c_cc[VMIN] = 0;
   raw.c_cc[VTIME] = 100;
 
-  if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1) // set atributes
+  if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1)
     die("tcsetattr");
 }
 
 int editorReadKey() {
   int nread;
   char c;
-  while((nread = read(STDIN_FILENO, &c, 1)) != 1) { // read stdin into c
+  while((nread = read(STDIN_FILENO, &c, 1)) != 1) {
     if (nread == -1 && errno != EAGAIN) die("read");
   }
 
@@ -223,7 +222,7 @@ void editorProcessKeypress() {
   int c = editorReadKey();
 
   switch (c) {
-    case CTRL_KEY('q'): // add ctrl_q as exit key
+    case CTRL_KEY('q'):
       editorRefreshScreen();
       exit(0);
       break;
