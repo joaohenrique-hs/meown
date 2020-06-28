@@ -11,6 +11,10 @@
 
 /*** defines ***/
 
+#define _DEFAULT_SOURCE
+#define _BSD_SOURCE
+#define _GNU_SOURCE
+
 #define MEOWN_VERSION "0.0.1"
 
 #define CTRL_KEY(k) ((k) & 0x1f)
