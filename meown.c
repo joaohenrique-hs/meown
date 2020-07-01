@@ -4,7 +4,6 @@
 #include <ctype.h>
 #include <string.h>
 #include <sys/ioctl.h>
-#include "sys/types.h"
 #include <stdio.h>
 #include <termios.h>
 #include <unistd.h>
@@ -40,6 +39,7 @@ typedef struct erow {
 
 struct editorConfig {
   int cx, cy;
+  int rowoff;
   int screenrows;
   int screencols;
   int numrows;
@@ -197,7 +197,8 @@ void abFree(struct abuf *ab) {
 void editorDrawRows(struct abuf *ab) {
   int y;
   for (y = 0; y <= E.screenrows; y++) {
-    if(y >= E.numrows) {
+    int filerow = y + E.rowoff;
+    if(filerow >= E.numrows) {
       if (E.numrows == 0 && y == E.screenrows / 3) {
         char welcome[80];
         int welcomelen = snprintf(welcome, sizeof(welcome),
@@ -220,9 +221,9 @@ void editorDrawRows(struct abuf *ab) {
         abAppend(ab, "\r\n", 2);
       }
     } else {
-      int len = E.row[y].size;
+      int len = E.row[filerow].size;
       if (len > E.screencols) len = E.screencols;
-      abAppend(ab, E.row[y].chars, len);
+      abAppend(ab, E.row[filerow].chars, len);
       abAppend(ab, "\r\n", 2);
     }
   }
@@ -296,10 +297,10 @@ void editorProcessKeypress() {
       E.cx = E.screencols - 1;
       break;
 
-    case 'h':
-    case 'j':
-    case 'k':
-    case 'l':
+    case ARROW_LEFT:
+    case ARROW_RIGHT:
+    case ARROW_UP:
+    case ARROW_DOWN:
       editorMoveCursor(c);
       break;
   }
@@ -310,6 +311,7 @@ void editorProcessKeypress() {
 void initEditor() {
   E.cx = 0;
   E.cy = 0;
+  E.rowoff = 0;
   E.numrows = 0;
   E.row = NULL;
 
