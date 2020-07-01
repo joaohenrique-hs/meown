@@ -160,10 +160,10 @@ void editorOpen (char *filename) {
   char *line = NULL;
   size_t linecap = 0;
   ssize_t linelen;
-  linelen = getline(&line, &linecap, fp);
-  if (linelen != -1) {
-    while (linelen > 0 && (line[linelen -1] == '\n' || line[linelen -1] == '\r')) 
-        linelen--;
+  while((linelen = getline(&line, &linecap, fp)) != -1) {
+    while (linelen > 0 && (line[linelen -1] == '\n' ||
+                           line[linelen -1] == '\r'))
+      linelen--;
     editorAppendRow(line, linelen);
   }
   free(line);
@@ -223,6 +223,7 @@ void editorDrawRows(struct abuf *ab) {
       int len = E.row[y].size;
       if (len > E.screencols) len = E.screencols;
       abAppend(ab, E.row[y].chars, len);
+      abAppend(ab, "\r\n", 2);
     }
   }
 }
