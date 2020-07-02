@@ -70,7 +70,7 @@ void enableRawMode() {
   atexit(disableRawMode);
   struct termios raw = E.orig_termios;
 
-  raw.c_iflag &= ~( BRKINT | ICRNL | INPCK | ISTRIP | IXON); 
+  raw.c_iflag &= ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON); 
   raw.c_oflag &= ~(OPOST);
   raw.c_cflag &= ~(CS8);
   raw.c_lflag &= ~(ECHO | ICANON | IEXTEN | ISIG);
@@ -122,6 +122,14 @@ int editorReadKey() {
 
     return('\x1b');
   } else {
+
+    switch (c) {
+      case 'j': return ARROW_DOWN;
+      case 'k': return ARROW_UP;
+      case 'l': return ARROW_RIGHT;
+      case 'h': return ARROW_LEFT;
+    }
+
     return c;
   }
 }
