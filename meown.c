@@ -213,29 +213,23 @@ void editorScroll() {
 
 void editorDrawRows(struct abuf *ab) {
   int y;
-  for (y = 0; y <= E.screenrows; y++) {
+  for (y = 0; y < E.screenrows; y++) {
     int filerow = y + E.rowoff;
-    if(filerow >= E.numrows) {
+    if (filerow >= E.numrows) {
       if (E.numrows == 0 && y == E.screenrows / 3) {
         char welcome[80];
         int welcomelen = snprintf(welcome, sizeof(welcome),
-            "Meown editor -- version %s", MEOWN_VERSION);
+          "Meown editor -- version %s", MEOWN_VERSION);
         if (welcomelen > E.screencols) welcomelen = E.screencols;
         int padding = (E.screencols - welcomelen) / 2;
         if (padding) {
           abAppend(ab, "~", 1);
+          padding--;
         }
-        while (padding--) {
-          abAppend(ab, " ", 1);
-        }
+        while (padding--) abAppend(ab, " ", 1);
         abAppend(ab, welcome, welcomelen);
       } else {
         abAppend(ab, "~", 1);
-      }
-
-      abAppend(ab, "\x1b[K", 3);
-      if (y < E.screenrows) {
-        abAppend(ab, "\r\n", 2);
       }
     } else {
       int len = E.row[filerow].size;
