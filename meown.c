@@ -202,7 +202,7 @@ void abFree(struct abuf *ab) {
 
 /*** output ***/
 
-void editroScroll() {
+void editorScroll() {
   if (E.cy < E.rowoff) {
     E.rowoff = E.cy;
   }
@@ -247,7 +247,7 @@ void editorDrawRows(struct abuf *ab) {
 }
 
 void editorRefreshScreen() {
-  editroScroll();
+  editorScroll();
 
   struct abuf ab = ABUF_INIT;
 
