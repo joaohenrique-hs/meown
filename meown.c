@@ -280,11 +280,12 @@ void editorMoveCursor(int key) {
         E.cy++;
       break;
     case ARROW_RIGHT:
-      if (E.cx < E.screencols)
-        E.cx++;
+      E.cx++;
       break;
     case ARROW_LEFT:
+      if (E.cx != 0)
         E.cx--;
+      break;
   }
 }
 
