@@ -44,6 +44,7 @@ struct editorConfig {
   int screenrows;
   int screencols;
   int numrows;
+  int lastposition;
   erow *row;
   struct termios orig_termios;
 };
@@ -270,6 +271,7 @@ void editorRefreshScreen() {
 /*** input ***/
 
 void editorMoveCursor(int key) {
+  int lastrow = E.cy;
   erow *row = (E.cy >= E.numrows) ? NULL : &E.row[E.cy];
 
   switch (key) {
@@ -291,10 +293,20 @@ void editorMoveCursor(int key) {
       break;
   }
 
-  row = (E.cy >= E.numrows) ? NULL : &E.row[E.cy];
-  int rowlen = row ? row->size : 0;
-  if (E.cx > rowlen)
-    E.cx = rowlen;
+  if (E.cy != lastrow) {
+    row = (E.cy >= E.numrows) ? NULL : &E.row[E.cy];
+    int rowlen = row ? row->size : 0;
+    if (E.cx > rowlen) {
+      E.lastposition = E.cx;
+      E.cx = rowlen;
+    }
+    else {
+      E.cx = E.lastposition;
+    }
+  }
+  else {
+    E.lastposition = E.cx;
+  }
 }
 
 void editorProcessKeypress() {
@@ -341,6 +353,7 @@ void initEditor() {
   E.rowoff = 0;
   E.coloff = 0;
   E.numrows = 0;
+  E.lastposition = 0;
   E.row = NULL;
 
   if (getWindowSize(&E.screenrows, &E.screencols) == -1) die("getWindowSize");
