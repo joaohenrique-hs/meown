@@ -284,8 +284,12 @@ void editorMoveCursor(int key) {
         E.cy++;
       break;
     case ARROW_RIGHT:
-      if (row && E.cx < row->size)
+      if (row && E.cx < row->size) {
         E.cx++;
+      } else if (row && E.cx == row->size) {
+        E.cx = 0;
+        E.cy++;
+      }
       break;
     case ARROW_LEFT:
       if (E.cx != 0) {
